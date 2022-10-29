@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 project(SDL2Test)
 
 set(SDL2_DIR "${CMAKE_CURRENT_LIST_DIR}/SDL2/cmake")
@@ -20,7 +23,10 @@ include_directories(${SDL2_INCLUDE_DIRS})
 set(SOURCES 
   src/main.cpp
   src/GameModule/mainwindow.h
-  src/GameModule/mainwindow.cpp)
+  src/GameModule/mainwindow.cpp
+  src/stuff/textureloader.h
+  src/Stuff/texture.h
+  src/Stuff/texture.cpp)
 
 add_executable(SDL2Test src/main.cpp ${SOURCES})
 target_link_libraries(SDL2Test ${SDL2_LIBRARIES})

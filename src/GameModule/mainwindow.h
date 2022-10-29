@@ -2,7 +2,9 @@
 #define MAINWINDOW_H
 
 #include <iostream>
+#include <memory>
 #include <SDL.h>
+#include "../Stuff/texture.h"
 
 namespace GUI 
 {
@@ -23,6 +25,8 @@ private:
 
     const unsigned window_width { 640 };
     const unsigned window_height { 480 };
+
+    std::unique_ptr<Stuff::Texture> texture{ nullptr };
 
     bool initSDL();
     bool initWindow();
