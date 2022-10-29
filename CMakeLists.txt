@@ -27,10 +27,12 @@ set(SOURCES
   src/stuff/textureloader.h
   src/Stuff/texture.h
   src/Stuff/texture.cpp
+  src/Stuff/timer.h
+  src/Stuff/timer.cpp
   src/GameModule/button.h
   src/GameModule/button.cpp
-  src/Stuff/timer.h
-  src/Stuff/timer.cpp)
+  src/GameModule/drum.h
+  src/GameModule/drum.cpp)
 
 add_executable(SDL2Test src/main.cpp ${SOURCES})
 target_link_libraries(SDL2Test ${SDL2_LIBRARIES})

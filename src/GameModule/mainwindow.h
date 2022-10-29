@@ -6,6 +6,7 @@
 #include <SDL.h>
 #include "../Stuff/timer.h"
 #include "button.h"
+#include "drum.h"
 
 namespace GUI 
 {
@@ -32,6 +33,7 @@ private:
     float currentTime { 0.0f };
 
     std::unique_ptr<GUI::Button> startButton{ nullptr };
+    std::unique_ptr<GUI::Drum> drum{ nullptr };
 
     bool initSDL();
     bool initWindow();

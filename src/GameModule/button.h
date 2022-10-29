@@ -10,12 +10,12 @@ namespace GUI
 class Button
 {
 public:
-    explicit Button(SDL_Renderer *renderer,
+    Button(SDL_Renderer *renderer,
                     const std::string &file,
                     const SDL_Rect &pos);
     virtual ~Button();
 
-    void animate(float timeStep);
+    void render(float timeStep);
 
 private:
     std::unique_ptr<Stuff::Texture> buttonTexture{ nullptr };

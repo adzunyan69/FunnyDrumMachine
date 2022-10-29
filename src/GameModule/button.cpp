@@ -9,6 +9,7 @@ Button::Button(SDL_Renderer *renderer,
     : buttonTexture(std::make_unique<Stuff::Texture>(renderer, file)),
       pos(pos)
 {
+    SDL_Log("Creating button with texture %s", file.c_str());
     if(buttonTexture == nullptr)
     {
         SDL_Log("Unable to load texture for the button %s", file.c_str());
@@ -24,7 +25,7 @@ Button::~Button()
 
 }
 
-void Button::animate(float timeStep)
+void Button::render(float timeStep)
 {
     float transparencyStep = static_cast<float>(transparencyChangePerSecond) * timeStep;
     if(increaseTransparency)

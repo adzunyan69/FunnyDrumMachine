@@ -28,23 +28,18 @@ bool MainWindow::init()
 
 bool MainWindow::loop()
 {
-    //Main loop flag
     bool quit = false;
-    //Event handler
     SDL_Event e;
     while(!quit)
     {
-        //Handle events on queue
         while( SDL_PollEvent( &e ) != 0 )
         {
-            //User requests quit
             if( e.type == SDL_QUIT )
             {
                 quit = true;
             }
 
         }
-
 
         clear();
 
@@ -136,9 +131,15 @@ bool MainWindow::initGame()
                                                 "images/button.bmp",
                                                 buttonPos);
 
-
-    //Update screen
-    SDL_RenderPresent( renderer );
+    drum = std::make_unique<GUI::Drum>(renderer,
+                                       std::vector<std::string>
+                                       {
+                                           "images/button.bmp",
+                                           "images/button.bmp",
+                                           "images/button.bmp"
+                                        },
+                                       SDL_Point{.x = 50, .y = 50},
+                                       SDL_Point{.x = 100, .y = 100});
 
     return true;
 }
@@ -151,9 +152,8 @@ void MainWindow::clear()
 
 void MainWindow::render(float timeStep)
 {
-    //if(timeStep != 0.0f)
-        //SDL_Log("%f", timeStep);
-    startButton->animate(timeStep);
+    startButton->render(timeStep);
+    drum->render();
 
     SDL_RenderPresent(renderer);
 }
