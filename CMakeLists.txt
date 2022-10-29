@@ -17,5 +17,10 @@ string(STRIP "${SDL2_LIBRARIES}" SDL2_LIBRARIES)
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
-add_executable(SDL2Test src/main.cpp)
+set(SOURCES 
+  src/main.cpp
+  src/GameModule/mainwindow.h
+  src/GameModule/mainwindow.cpp)
+
+add_executable(SDL2Test src/main.cpp ${SOURCES})
 target_link_libraries(SDL2Test ${SDL2_LIBRARIES})
