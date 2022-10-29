@@ -17,7 +17,6 @@ Button::Button(SDL_Renderer *renderer,
     }
 
     buttonTexture->updateTransparency(currentTransparency);
-    buttonTexture->renderTexture(pos);
 }
 
 Button::~Button()
@@ -27,6 +26,9 @@ Button::~Button()
 
 void Button::render(float timeStep)
 {
+    if(buttonTexture == nullptr)
+        return;
+
     float transparencyStep = static_cast<float>(transparencyChangePerSecond) * timeStep;
     if(increaseTransparency)
     {

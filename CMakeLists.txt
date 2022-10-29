@@ -32,7 +32,9 @@ set(SOURCES
   src/GameModule/button.h
   src/GameModule/button.cpp
   src/GameModule/drum.h
-  src/GameModule/drum.cpp)
+  src/GameModule/drum.cpp
+  src/GameModule/cell.h
+  src/GameModule/cell.cpp)
 
 add_executable(SDL2Test src/main.cpp ${SOURCES})
 target_link_libraries(SDL2Test ${SDL2_LIBRARIES})

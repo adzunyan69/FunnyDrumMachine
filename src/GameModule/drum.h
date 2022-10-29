@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <memory>
-#include "../Stuff/texture.h"
+#include "cell.h"
 
 namespace GUI
 {
@@ -19,10 +19,9 @@ public:
 
     void render();
 private:
-    std::vector<std::pair<std::unique_ptr<Stuff::Texture>, SDL_Rect>> cells;
+    std::vector<std::unique_ptr<Cell>> cells;
     std::vector<SDL_Rect> cellsStrongPositions;
     const SDL_Point pos;
-    const SDL_Point cellSize;
 
     const int spacingBetweenCells { 5 };
 };

@@ -7,8 +7,7 @@ Drum::Drum(SDL_Renderer *renderer,
            const std::vector<std::string> &files,
            const SDL_Point &pos,
            const SDL_Point &cellSize)
-    : pos(pos),
-      cellSize(cellSize)
+    : pos(pos)
 {
     if(files.empty() == true)
     {
@@ -27,12 +26,11 @@ Drum::Drum(SDL_Renderer *renderer,
 
         cellsStrongPositions.push_back(textureRect);
         cells.push_back(
-                    {
-                        std::make_unique<Stuff::Texture>(renderer, files.at(i)),
-                        textureRect
-                    }
+                    std::make_unique<Cell>(renderer,
+                                           files.at(i),
+                                           textureRect
+                                           )
         );
-
     }
 }
 
@@ -43,9 +41,12 @@ Drum::~Drum()
 
 void Drum::render()
 {
-    for(auto &[texture, rect] : cells)
+    for(auto &cell : cells)
     {
-        texture->renderTexture(rect);
+        if(cell == nullptr)
+            return;
+
+        cell->render();
     }
 }
 
