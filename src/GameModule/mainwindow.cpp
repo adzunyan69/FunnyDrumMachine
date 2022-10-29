@@ -17,36 +17,44 @@ MainWindow::~MainWindow()
 
 bool MainWindow::init()
 {
+    stepTimer.start();
     auto init = (initSDL() &&
                  initWindow() &&
                  initSurface() &&
-                 initRenderer());
-    texture = std::make_unique<Stuff::Texture>(renderer, "images/test");
-
+                 initRenderer() &&
+                 initGame());
     return init;
 }
 
 bool MainWindow::loop()
 {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
-
-    Stuff::Texture texture{ renderer, "images/test.bmp" };
-    //Render texture to screen
-    SDL_Rect DestR
+    //Main loop flag
+    bool quit = false;
+    //Event handler
+    SDL_Event e;
+    while(!quit)
     {
-        .x = 200,
-            .y = 150,
-                .w = 50,
-                .h = 75
-    };
-    texture.renderTexture(DestR);
+        //Handle events on queue
+        while( SDL_PollEvent( &e ) != 0 )
+        {
+            //User requests quit
+            if( e.type == SDL_QUIT )
+            {
+                quit = true;
+            }
 
-    //Update screen
-    SDL_RenderPresent( renderer );
+        }
 
-    SDL_Delay(3000);
+
+        clear();
+
+        float timeStep = stepTimer.getTicks() / 1000.f - currentTime;
+
+        render(timeStep);
+
+        currentTime += timeStep;
+
+    }
     return true;
 }
 
@@ -98,7 +106,7 @@ bool MainWindow::initSurface()
 bool MainWindow::initRenderer()
 {
     SDL_Log("Init SDL Renderer");
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     if (renderer == nullptr)
     {
@@ -107,6 +115,47 @@ bool MainWindow::initRenderer()
     }
 
     return true;
+}
+
+bool MainWindow::initGame()
+{
+    SDL_Log("Init Game's stuff");
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(renderer);
+    SDL_RenderPresent(renderer);
+
+    auto buttonPos = SDL_Rect {
+            .x = static_cast<int>(window_width)/2 - 50,
+            .y = static_cast<int>(window_height) - 100,
+            .w = 100,
+            .h = 25
+    };
+
+    startButton = std::make_unique<GUI::Button>(renderer,
+                                                "images/button.bmp",
+                                                buttonPos);
+
+
+    //Update screen
+    SDL_RenderPresent( renderer );
+
+    return true;
+}
+
+void MainWindow::clear()
+{
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
+    SDL_RenderClear(renderer);
+}
+
+void MainWindow::render(float timeStep)
+{
+    //if(timeStep != 0.0f)
+        //SDL_Log("%f", timeStep);
+    startButton->animate(timeStep);
+
+    SDL_RenderPresent(renderer);
 }
 
 } // GUI
