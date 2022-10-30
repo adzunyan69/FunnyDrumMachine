@@ -3,6 +3,7 @@
 
 #include <string>
 #include <SDL.h>
+#include <SDL_ttf.h>
 
 namespace Stuff::StuffPrivate
 {
@@ -14,7 +15,6 @@ public:
 
     static SDL_Texture* loadBMP(SDL_Renderer *renderer, const std::string &file)
     {
-        SDL_Log("Loading texture %s", file.c_str());
         SDL_Texture *texture { nullptr };
 
         SDL_Surface *textureSurface { nullptr };
@@ -35,6 +35,33 @@ public:
 
         SDL_FreeSurface(textureSurface);
         return texture;
+    }
+
+    static SDL_Texture* loadTextTexture(SDL_Renderer *renderer,
+                                        const std::string &text,
+                                        TTF_Font *font,
+                                        SDL_Color color)
+    {
+        SDL_Texture *textTexture { nullptr };
+        SDL_Surface *textSurface { nullptr };
+
+        textSurface = TTF_RenderText_Blended(font, text.c_str(), color);
+        if(textSurface == nullptr)
+        {
+            SDL_Log("Unable to create surface for the text %s: %s", text.c_str(), TTF_GetError());
+            return nullptr;
+        }
+
+        textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+        if(textTexture == nullptr)
+        {
+            SDL_Log("Unable to load texture for the text %s: %s", text.c_str(), SDL_GetError());
+            SDL_FreeSurface(textSurface);
+            return nullptr;
+        }
+
+        SDL_FreeSurface(textSurface);
+        return textTexture;
     }
 };
 

@@ -11,6 +11,7 @@ MainWindow::~MainWindow()
 {
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
+    TTF_Quit();
     SDL_Quit();
 
 }
@@ -18,6 +19,7 @@ MainWindow::~MainWindow()
 bool MainWindow::init()
 {
     auto init = (initSDL() &&
+                 initTTF() &&
                  initWindow() &&
                  initSurface() &&
                  initRenderer() &&
@@ -51,11 +53,7 @@ bool MainWindow::loop()
 
         clear();
 
-        SDL_Log("fps: %f", frameInfo.fps);
-        render(frameInfo.frameTime);
-
-
-
+        render(frameInfo);
     }
     return true;
 }
@@ -66,6 +64,18 @@ bool MainWindow::initSDL()
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
     {
         SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
+        return false;
+    }
+
+    return true;
+}
+
+bool MainWindow::initTTF()
+{
+    SDL_Log("Init SDL_TTF");
+    if(TTF_Init() != 0)
+    {
+        SDL_Log("Unable to initialize SDL_ttf: %s", TTF_GetError());
         return false;
     }
 
@@ -108,7 +118,7 @@ bool MainWindow::initSurface()
 bool MainWindow::initRenderer()
 {
     SDL_Log("Init SDL Renderer");
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     if (renderer == nullptr)
     {
@@ -163,6 +173,8 @@ bool MainWindow::initGame()
                     );
     }
 
+    fpsCounter = std::make_unique<GUI::FPSCounter>(renderer, "JetBrainsMono-Regular.ttf");
+
     return true;
 }
 
@@ -192,16 +204,20 @@ void MainWindow::clear()
     SDL_RenderClear(renderer);
 }
 
-void MainWindow::render(float timeStep)
+void MainWindow::render(Stuff::FrameInfo frameInfo)
 {
-    startButton->render(timeStep);
+    if(startButton != nullptr)
+        startButton->render(frameInfo.frameTime);
     for(auto &drum : drums)
     {
         if(drum == nullptr)
             continue;
 
-        drum->render(timeStep);
+        drum->render(frameInfo.frameTime);
     }
+
+    if(fpsCounter != nullptr)
+        fpsCounter->render(frameInfo.fps);
 
     SDL_RenderPresent(renderer);
 }

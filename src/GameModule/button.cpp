@@ -7,7 +7,7 @@ Button::Button(SDL_Renderer *renderer,
                const std::string &file,
                const SDL_Rect &pos,
                std::function< void(void) > &callback)
-    : buttonTexture(std::make_unique<Stuff::Texture>(renderer, file)),
+    : buttonTexture(Stuff::Texture::loadTexture(renderer, file)),
       pos(pos),
       callback(callback)
 {

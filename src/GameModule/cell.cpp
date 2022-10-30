@@ -7,8 +7,8 @@ Cell::Cell(SDL_Renderer *renderer,
            const std::string &file,
            const SDL_Rect &currentRect,
            const SDL_Rect &borders)
-    : cellTexture(std::make_unique<Stuff::Texture>(renderer, file)),
-      fadeTexture(std::make_unique<Stuff::Texture>(renderer, "images/test1.bmp")),
+    : cellTexture(Stuff::Texture::loadTexture(renderer, file)),
+      fadeTexture(Stuff::Texture::loadTexture(renderer, "images/test1.bmp")),
       currentRect(currentRect),
       borders(borders),
       currentPositionY(static_cast<float>(currentRect.y))

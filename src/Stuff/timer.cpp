@@ -16,7 +16,7 @@ FrameInfo FPSTimer::getFrameInfo()
     currentTicks = ticks;
     timeElapsed += frameTime;
 
-    if(timeElapsed >= 1.0f)
+    if(timeElapsed >= 0.5f)
     {
         fps = frames / timeElapsed;
         frames = 0;

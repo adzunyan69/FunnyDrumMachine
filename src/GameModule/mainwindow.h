@@ -4,9 +4,11 @@
 #include <iostream>
 #include <memory>
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include "../Stuff/timer.h"
 #include "button.h"
 #include "drum.h"
+#include "fpscounter.h"
 
 namespace GUI 
 {
@@ -30,12 +32,13 @@ private:
     const unsigned window_width { 640 };
     const unsigned window_height { 480 };
 
-    float currentTime { 0.0f };
 
     std::unique_ptr<GUI::Button> startButton{ nullptr };
     std::vector<std::unique_ptr<GUI::Drum>> drums;
+    std::unique_ptr<GUI::FPSCounter> fpsCounter{ nullptr };
 
     bool initSDL();
+    bool initTTF();
     bool initWindow();
     bool initSurface();
     bool initRenderer();
@@ -45,7 +48,7 @@ private:
     bool isShuffling() const;
 
     void clear();
-    void render(float timeStep);
+    void render(Stuff::FrameInfo frameInfo);
 
 };
 
