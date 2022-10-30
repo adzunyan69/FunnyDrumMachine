@@ -17,7 +17,6 @@ MainWindow::~MainWindow()
 
 bool MainWindow::init()
 {
-    stepTimer.start();
     auto init = (initSDL() &&
                  initWindow() &&
                  initSurface() &&
@@ -33,8 +32,7 @@ bool MainWindow::loop()
     while(!quit)
     {
 
-        float timeStep = stepTimer.getTicks() / 1000.f - currentTime;
-        currentTime += timeStep;
+        auto frameInfo = fpsTimer.getFrameInfo();
 
         while( SDL_PollEvent( &e ) != 0 )
         {
@@ -53,7 +51,8 @@ bool MainWindow::loop()
 
         clear();
 
-        render(timeStep);
+        SDL_Log("fps: %f", frameInfo.fps);
+        render(frameInfo.frameTime);
 
 
 
@@ -109,7 +108,7 @@ bool MainWindow::initSurface()
 bool MainWindow::initRenderer()
 {
     SDL_Log("Init SDL Renderer");
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     if (renderer == nullptr)
     {

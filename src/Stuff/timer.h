@@ -6,35 +6,26 @@
 namespace Stuff
 {
 
-class Timer
+struct FrameInfo
+{
+    float frameTime { 0.0 };
+    float fps { 0.0 };
+};
+
+class FPSTimer
 {
     public:
-        //Initializes variables
-        Timer();
+        FPSTimer();
 
-        //The various clock actions
         void start();
-        void stop();
-        void pause();
-        void unpause();
 
-        //Gets the timer's time
-        Uint32 getTicks();
-
-        //Checks the status of the timer
-        bool isStarted();
-        bool isPaused();
+        FrameInfo getFrameInfo();
 
     private:
-        //The clock time when the timer started
-        Uint32 mStartTicks;
-
-        //The ticks stored when the timer was paused
-        Uint32 mPausedTicks;
-
-        //The timer status
-        bool mPaused;
-        bool mStarted;
+        Uint32 currentTicks{ 0 };
+        Uint32 frames{ 0 };
+        float timeElapsed { 0.0f };
+        float fps { 0.0f };
 };
 
 } // Stuff

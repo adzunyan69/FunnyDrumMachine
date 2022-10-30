@@ -3,106 +3,35 @@
 namespace Stuff
 {
 
-Timer::Timer()
+FPSTimer::FPSTimer()
 {
-    //Initialize the variables
-    mStartTicks = 0;
-    mPausedTicks = 0;
-
-    mPaused = false;
-    mStarted = false;
 }
 
-void Timer::start()
+
+FrameInfo FPSTimer::getFrameInfo()
 {
-    //Start the timer
-    mStarted = true;
+    float ticks = SDL_GetTicks();
 
-    //Unpause the timer
-    mPaused = false;
+    float frameTime = (ticks - currentTicks) / 1000.0f;
+    currentTicks = ticks;
+    timeElapsed += frameTime;
 
-    //Get the current clock time
-    mStartTicks = SDL_GetTicks();
-    mPausedTicks = 0;
-}
-
-void Timer::stop()
-{
-    //Stop the timer
-    mStarted = false;
-
-    //Unpause the timer
-    mPaused = false;
-
-    //Clear tick variables
-    mStartTicks = 0;
-    mPausedTicks = 0;
-}
-
-void Timer::pause()
-{
-    //If the timer is running and isn't already paused
-    if( mStarted && !mPaused )
+    if(timeElapsed >= 1.0f)
     {
-        //Pause the timer
-        mPaused = true;
-
-        //Calculate the paused ticks
-        mPausedTicks = SDL_GetTicks() - mStartTicks;
-        mStartTicks = 0;
+        fps = frames / timeElapsed;
+        frames = 0;
+        timeElapsed = 0.0f;
     }
-}
-
-void Timer::unpause()
-{
-    //If the timer is running and paused
-    if( mStarted && mPaused )
+    else
     {
-        //Unpause the timer
-        mPaused = false;
-
-        //Reset the starting ticks
-        mStartTicks = SDL_GetTicks() - mPausedTicks;
-
-        //Reset the paused ticks
-        mPausedTicks = 0;
-    }
-}
-
-Uint32 Timer::getTicks()
-{
-    //The actual timer time
-    Uint32 time = 0;
-
-    //If the timer is running
-    if( mStarted )
-    {
-        //If the timer is paused
-        if( mPaused )
-        {
-            //Return the number of ticks when the timer was paused
-            time = mPausedTicks;
-        }
-        else
-        {
-            //Return the current time minus the start time
-            time = SDL_GetTicks() - mStartTicks;
-        }
+        ++frames;
     }
 
-    return time;
-}
-
-bool Timer::isStarted()
-{
-    //Timer is running and paused or unpaused
-    return mStarted;
-}
-
-bool Timer::isPaused()
-{
-    //Timer is running and paused
-    return mPaused && mStarted;
+    return FrameInfo
+    {
+        .frameTime = frameTime,
+        .fps = fps
+    };
 }
 
 } // Stuff

@@ -21,7 +21,7 @@ public:
     bool loop();
 
 private:
-    Stuff::Timer stepTimer;
+    Stuff::FPSTimer fpsTimer;
 
     SDL_Window *window{nullptr};
     SDL_Surface *surface{nullptr};
