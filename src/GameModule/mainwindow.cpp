@@ -118,7 +118,7 @@ bool MainWindow::initSurface()
 bool MainWindow::initRenderer()
 {
     SDL_Log("Init SDL Renderer");
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     if (renderer == nullptr)
     {
@@ -162,13 +162,28 @@ bool MainWindow::initGame()
         "images/test.bmp"
     };
 
-    for(std::size_t i = 0; i < 5; ++i)
+    const int drumsCount = 5;
+    const int indentForDrums = (window_width - 550) / 2;
+    const int spacingBetweenDrums = 20;
+    const int drumsWidth = ((window_width - indentForDrums * 2) - (spacingBetweenDrums * (drumsCount - 1))) / drumsCount;
+    for(int i = 0; i < drumsCount; ++i)
     {
+        SDL_Point drumPosition = SDL_Point
+        {
+                .x = indentForDrums + drumsWidth * i + spacingBetweenDrums * i,
+                .y = 50
+        };
+
+        SDL_Point cellSize = SDL_Point
+        {
+                .x = drumsWidth,
+                .y = drumsWidth
+        };
         drums.push_back(
                     std::make_unique<GUI::Drum>(renderer,
                                                 drumImages,
-                                                SDL_Point{.x = static_cast<int>(50 + 100 * i), .y = 50},
-                                                SDL_Point{.x = 75, .y = 75}
+                                                drumPosition,
+                                                cellSize
                                                 )
                     );
     }
