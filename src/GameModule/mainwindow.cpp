@@ -143,9 +143,9 @@ bool MainWindow::initStartButton()
 {
   auto buttonPos = SDL_Rect {
                    .x = static_cast<int>(windowWidth)/2 - 50,
-                   .y = static_cast<int>(windowHeight) - 100,
+                   .y = static_cast<int>(windowHeight) - 105,
                    .w = 100,
-                   .h = 50
+                   .h = 100
   };
 
   std::function<void(void)> callback = [this] ()
@@ -168,9 +168,9 @@ bool MainWindow::initDrums()
 {
   const std::vector<std::string> drumImages =
   {
-    "images/test.bmp",
-    "images/test.bmp",
-    "images/test.bmp"
+    "images/a.bmp",
+    "images/b.bmp",
+    "images/c.bmp"
   };
 
   const int drumsCount = 5;

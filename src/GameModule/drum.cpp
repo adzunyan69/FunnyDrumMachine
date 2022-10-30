@@ -89,7 +89,7 @@ void Drum::startShuffle(float seconds)
   if( isShuffling() == true )
     return;
 
-  int steps = static_cast<std::size_t>(Stuff::UniformRandom::uniformInt(5, 10));
+  int steps = static_cast<std::size_t>(Stuff::UniformRandom::uniformInt(30, 50));
   SDL_Log("Steps for the drum: %d", steps);
 
   setNewIndexes(steps);
