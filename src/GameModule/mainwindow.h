@@ -16,39 +16,42 @@ namespace GUI
 class MainWindow
 {
 public:
-    MainWindow();
-    virtual ~MainWindow();
+  MainWindow();
+  virtual ~MainWindow();
 
-    bool init();
-    bool loop();
+  bool init();
+  bool loop();
 
 private:
-    Stuff::FPSTimer fpsTimer;
+  Stuff::FPSTimer fpsTimer;
 
-    SDL_Window *window{nullptr};
-    SDL_Surface *surface{nullptr};
-    SDL_Renderer *renderer{nullptr};
+  SDL_Window *window{nullptr};
+  SDL_Surface *surface{nullptr};
+  SDL_Renderer *renderer{nullptr};
 
-    const unsigned window_width { 640 };
-    const unsigned window_height { 480 };
+  const unsigned windowWidth { 640 };
+  const unsigned windowHeight { 480 };
 
 
-    std::unique_ptr<GUI::Button> startButton{ nullptr };
-    std::vector<std::unique_ptr<GUI::Drum>> drums;
-    std::unique_ptr<GUI::FPSCounter> fpsCounter{ nullptr };
+  std::unique_ptr<GUI::Button> startButton{ nullptr };
+  std::vector<std::unique_ptr<GUI::Drum>> drums;
+  std::unique_ptr<GUI::FPSCounter> fpsCounter{ nullptr };
 
-    bool initSDL();
-    bool initTTF();
-    bool initWindow();
-    bool initSurface();
-    bool initRenderer();
-    bool initGame();
+  bool initSDL();
+  bool initTTF();
+  bool initWindow();
+  bool initSurface();
+  bool initRenderer();
+  bool initGame();
+  bool initStartButton();
+  bool initDrums();
+  bool initFPSCounter();
 
-    void startDrums();
-    bool isShuffling() const;
+  void startDrums();
+  bool isShuffling() const;
 
-    void clear();
-    void render(Stuff::FrameInfo frameInfo);
+  void clear();
+  void render(Stuff::FrameInfo frameInfo);
 
 };
 

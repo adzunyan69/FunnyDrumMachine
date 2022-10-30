@@ -9,9 +9,9 @@ namespace Stuff
 class UniformRandom
 {
 public:
-    UniformRandom() = delete;
+  UniformRandom() = delete;
 
-    static int uniformInt(int min, int max);
+  static int uniformInt(int min, int max);
 };
 
 } // Stuff

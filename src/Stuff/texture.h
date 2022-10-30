@@ -11,35 +11,35 @@ class Texture
 {
 public:
 
-    static std::unique_ptr<Texture> loadTexture(
-            SDL_Renderer *renderer,
-            const std::string &file,
-            SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND);
+  static std::unique_ptr<Texture> loadTexture(
+      SDL_Renderer *renderer,
+      const std::string &file,
+      SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND);
 
-    static std::unique_ptr<Texture> loadTextTexture(
-            SDL_Renderer *renderer,
-            const std::string &text,
-            TTF_Font *font,
-            SDL_Color color);
+  static std::unique_ptr<Texture> loadTextTexture(
+      SDL_Renderer *renderer,
+      const std::string &text,
+      TTF_Font *font,
+      SDL_Color color);
 
-    virtual ~Texture();
+  virtual ~Texture();
 
-    void renderTexture(const SDL_Rect &dst);
-    void renderTexture(const SDL_Rect &src, const SDL_Rect &dst);
-    void updateTransparency(Uint8 a);
+  void renderTexture(const SDL_Rect &dst);
+  void renderTexture(const SDL_Rect &src, const SDL_Rect &dst);
+  void updateTransparency(Uint8 a);
 
 private:
-    Texture(SDL_Renderer *renderer,
-            const std::string &file,
-            SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND);
+  Texture(SDL_Renderer *renderer,
+          const std::string &file,
+          SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND);
 
-    Texture(SDL_Renderer *renderer,
-            const std::string &text,
-            TTF_Font *font,
-            SDL_Color color);
+  Texture(SDL_Renderer *renderer,
+          const std::string &text,
+          TTF_Font *font,
+          SDL_Color color);
 
-    SDL_Renderer *renderer{ nullptr };
-    SDL_Texture *texture{ nullptr };
+  SDL_Renderer *renderer{ nullptr };
+  SDL_Texture *texture{ nullptr };
 };
 
 } // Stuff

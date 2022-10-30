@@ -3,35 +3,30 @@
 namespace Stuff
 {
 
-FPSTimer::FPSTimer()
-{
-}
-
-
 FrameInfo FPSTimer::getFrameInfo()
 {
-    float ticks = SDL_GetTicks();
+  float ticks = SDL_GetTicks();
 
-    float frameTime = (ticks - currentTicks) / 1000.0f;
-    currentTicks = ticks;
-    timeElapsed += frameTime;
+  float frameTime = (ticks - currentTicks) / 1000.0f;
+  currentTicks = ticks;
+  timeElapsed += frameTime;
 
-    if(timeElapsed >= 0.5f)
-    {
-        fps = frames / timeElapsed;
-        frames = 0;
-        timeElapsed = 0.0f;
-    }
-    else
-    {
-        ++frames;
-    }
+  if( timeElapsed >= 0.5f )
+  {
+    fps = frames / timeElapsed;
+    frames = 0;
+    timeElapsed = 0.0f;
+  }
+  else
+  {
+    ++frames;
+  }
 
-    return FrameInfo
-    {
-        .frameTime = frameTime,
+  return FrameInfo
+  {
+    .frameTime = frameTime,
         .fps = fps
-    };
+  };
 }
 
 } // Stuff
