@@ -20,7 +20,7 @@ public:
 
     void render(float timeStep);
     void startShuffle(float seconds);
-    inline bool isShuffling() const;
+    bool isShuffling() const;
 private:
     SDL_Renderer *renderer{ nullptr };
 

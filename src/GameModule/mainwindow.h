@@ -41,6 +41,9 @@ private:
     bool initRenderer();
     bool initGame();
 
+    void startDrums();
+    bool isShuffling() const;
+
     void clear();
     void render(float timeStep);
 

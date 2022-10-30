@@ -33,15 +33,8 @@ bool MainWindow::loop()
     while(!quit)
     {
 
-        static float t = 0.0f;
         float timeStep = stepTimer.getTicks() / 1000.f - currentTime;
         currentTime += timeStep;
-        t += timeStep;
-        if(t >= 1.0)
-        {
-            // SDL_Log("Second");
-            t = 0.0;
-        }
 
         while( SDL_PollEvent( &e ) != 0 )
         {
@@ -49,23 +42,19 @@ bool MainWindow::loop()
             {
                 quit = true;
             }
-            if( e.type == SDL_KEYUP )
-            {
-                SDL_Log("SDL KeyUp");
-                for(std::size_t i = 0; i < drums.size(); ++i)
-                {
-                    if(drums.at(i) == nullptr)
-                        continue;
 
-                    drums.at(i)->startShuffle(4.0f + 0.25f * i);
-                }
-            }
+            if(isShuffling() == false && startButton->isEnabled() == false)
+                startButton->setEnabled(true);
+
+            if(startButton->isEnabled())
+                startButton->handleEvent(e);
 
         }
 
         clear();
 
         render(timeStep);
+
 
 
     }
@@ -120,7 +109,7 @@ bool MainWindow::initSurface()
 bool MainWindow::initRenderer()
 {
     SDL_Log("Init SDL Renderer");
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     if (renderer == nullptr)
     {
@@ -145,9 +134,16 @@ bool MainWindow::initGame()
             .h = 25
     };
 
+    std::function<void(void)> f = [this] ()
+    {
+        this->startDrums();
+        this->startButton->setEnabled(false);
+    };
+
     startButton = std::make_unique<GUI::Button>(renderer,
                                                 "images/button.bmp",
-                                                buttonPos);
+                                                buttonPos,
+                                                f);
 
 
     const std::vector<std::string> drumImages =
@@ -169,6 +165,26 @@ bool MainWindow::initGame()
     }
 
     return true;
+}
+
+void MainWindow::startDrums()
+{
+    for(std::size_t i = 0; i < drums.size(); ++i)
+    {
+        if(drums.at(i) == nullptr)
+            continue;
+
+        drums.at(i)->startShuffle(4.0f + 0.25f * i);
+    }
+}
+
+bool MainWindow::isShuffling() const
+{
+    for(auto &drum : drums)
+        if(drum->isShuffling())
+            return true;
+
+    return false;
 }
 
 void MainWindow::clear()
