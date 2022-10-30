@@ -32,22 +32,35 @@ bool MainWindow::loop()
     SDL_Event e;
     while(!quit)
     {
+
+        static float t = 0.0f;
+        float timeStep = stepTimer.getTicks() / 1000.f - currentTime;
+        currentTime += timeStep;
+        t += timeStep;
+        if(t >= 1.0)
+        {
+            // SDL_Log("Second");
+            t = 0.0;
+        }
+
         while( SDL_PollEvent( &e ) != 0 )
         {
             if( e.type == SDL_QUIT )
             {
                 quit = true;
             }
+            if( e.type == SDL_KEYUP )
+            {
+                SDL_Log("SDL KeyUp");
+                drum->startShuffle(4.5f);
+            }
 
         }
 
         clear();
 
-        float timeStep = stepTimer.getTicks() / 1000.f - currentTime;
-
         render(timeStep);
 
-        currentTime += timeStep;
 
     }
     return true;
@@ -153,7 +166,7 @@ void MainWindow::clear()
 void MainWindow::render(float timeStep)
 {
     startButton->render(timeStep);
-    drum->render();
+    drum->render(timeStep);
 
     SDL_RenderPresent(renderer);
 }

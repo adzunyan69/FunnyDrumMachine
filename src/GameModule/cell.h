@@ -12,14 +12,19 @@ class Cell
 public:
     Cell(SDL_Renderer *renderer,
          const std::string &file,
-         const SDL_Rect &pos);
+         const SDL_Rect &pos,
+         const SDL_Rect &borders);
     virtual ~Cell();
 
     void render();
+    void moveY(float step);
+    void setPosition(int y);
 
 private:
     std::unique_ptr<Stuff::Texture> cellTexture{ nullptr };
-    const SDL_Rect pos;
+    SDL_Rect pos;
+    const SDL_Rect borders;
+    float currentPositionY { 0 };
 };
 
 } // GUI

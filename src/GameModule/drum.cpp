@@ -7,7 +7,8 @@ Drum::Drum(SDL_Renderer *renderer,
            const std::vector<std::string> &files,
            const SDL_Point &pos,
            const SDL_Point &cellSize)
-    : pos(pos)
+    : renderer(renderer),
+      cellSize(cellSize)
 {
     if(files.empty() == true)
     {
@@ -15,21 +16,35 @@ Drum::Drum(SDL_Renderer *renderer,
         return;
     }
 
+    drumRect = SDL_Rect {
+            .x = pos.x,
+            .y = pos.y,
+            .w = cellSize.x,
+            .h = static_cast<int>(cellSize.y * files.size() + spacingBetweenCells * (files.size()))
+    };
+
     for(int i = 0; i < files.size(); ++i)
     {
         SDL_Rect textureRect {
             .x = pos.x,
-            .y = pos.y + spacingBetweenCells * (i + 1) + cellSize.y * i,
+            .y = pos.y + spacingBetweenCells * (i + 1) + cellSize.y * i - spacingBetweenCells/2,
             .w = cellSize.x,
             .h = cellSize.y
         };
 
+
+
         cellsStrongPositions.push_back(textureRect);
         cells.push_back(
-                    std::make_unique<Cell>(renderer,
-                                           files.at(i),
-                                           textureRect
-                                           )
+                    {
+                        std::make_unique<Cell>(
+                            renderer,
+                            files.at(i),
+                            textureRect,
+                            drumRect
+                        ),
+                        i
+                    }
         );
     }
 }
@@ -39,15 +54,65 @@ Drum::~Drum()
 
 }
 
-void Drum::render()
+void Drum::render(float timeStep)
 {
-    for(auto &cell : cells)
-    {
-        if(cell == nullptr)
-            return;
+    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
+    SDL_RenderFillRect(renderer, &drumRect);
 
+    if(shuffling)
+    {
+
+        float moveStep = shufflingSpeed * timeStep;
+
+        if((targetShufflingDistance - moveStep) <= 0)
+        {
+            for(auto &[cell, index] : cells)
+                cell->setPosition(cellsStrongPositions.at(index).y);
+
+            targetShufflingDistance = 0.0f;
+            shuffling = false;
+        }
+        else
+        {
+            for(auto &[cell, _] : cells)
+                cell->moveY(moveStep);
+
+            targetShufflingDistance -= moveStep;
+        }
+    }
+
+    for(auto &[cell, _] : cells)
+    {
         cell->render();
     }
+}
+
+void Drum::startShuffle(float seconds)
+{
+    SDL_Log("Staring suffle for the drum");
+    if(isShuffling() == true)
+        return;
+
+    std::size_t steps = 25; // randomize
+
+    setNewIndexes(steps);
+    targetShufflingDistance = static_cast<float>(steps) * (cellSize.y + spacingBetweenCells);
+    shufflingSpeed = targetShufflingDistance / seconds;
+
+    SDL_Log("Target distance: %f", targetShufflingDistance);
+
+    shuffling = true;
+}
+
+bool Drum::isShuffling() const
+{
+    return shuffling;
+}
+
+void Drum::setNewIndexes(std::size_t step)
+{
+    for(auto &[cell, index] : cells)
+        index = (index + step) % cells.size();
 }
 
 } // GUI
