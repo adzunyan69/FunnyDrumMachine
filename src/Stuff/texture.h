@@ -13,7 +13,8 @@ public:
     Texture(const Texture&) = delete;
     virtual ~Texture();
 
-    void renderTexture(const SDL_Rect &rect);
+    void renderTexture(const SDL_Rect &dst);
+    void renderTexture(const SDL_Rect &src, const SDL_Rect &dst);
     void updateTransparency(Uint8 a);
 
 private:

@@ -23,9 +23,14 @@ Texture::~Texture()
     SDL_DestroyTexture(texture);
 }
 
-void Texture::renderTexture(const SDL_Rect &rect)
+void Texture::renderTexture(const SDL_Rect &dst)
 {
-    SDL_RenderCopy(renderer, texture, nullptr, &rect);
+    SDL_RenderCopy(renderer, texture, nullptr, &dst);
+}
+
+void Texture::renderTexture(const SDL_Rect &src, const SDL_Rect &dst)
+{
+    SDL_RenderCopy(renderer, texture, &src, &dst);
 }
 
 void Texture::updateTransparency(Uint8 a)

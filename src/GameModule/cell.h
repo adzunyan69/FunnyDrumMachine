@@ -12,19 +12,22 @@ class Cell
 public:
     Cell(SDL_Renderer *renderer,
          const std::string &file,
-         const SDL_Rect &pos,
+         const SDL_Rect &currentRect,
          const SDL_Rect &borders);
     virtual ~Cell();
 
     void render();
-    void moveY(float step);
-    void setPosition(int y);
+    void move(float step);
+    void reset(int y);
 
 private:
     std::unique_ptr<Stuff::Texture> cellTexture{ nullptr };
-    SDL_Rect pos;
+    std::unique_ptr<Stuff::Texture> fadeTexture{ nullptr };
+    SDL_Point cellSize;
+    SDL_Rect currentRect;
     const SDL_Rect borders;
     float currentPositionY { 0 };
+    bool isSplitted { false };
 };
 
 } // GUI

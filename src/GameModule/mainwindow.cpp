@@ -147,9 +147,9 @@ bool MainWindow::initGame()
     drum = std::make_unique<GUI::Drum>(renderer,
                                        std::vector<std::string>
                                        {
-                                           "images/button.bmp",
-                                           "images/button.bmp",
-                                           "images/button.bmp"
+                                           "images/test.bmp",
+                                           "images/test.bmp",
+                                           "images/test.bmp"
                                         },
                                        SDL_Point{.x = 50, .y = 50},
                                        SDL_Point{.x = 100, .y = 100});

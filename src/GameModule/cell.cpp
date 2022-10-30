@@ -5,13 +5,19 @@ namespace GUI
 
 Cell::Cell(SDL_Renderer *renderer,
            const std::string &file,
-           const SDL_Rect &pos,
+           const SDL_Rect &currentRect,
            const SDL_Rect &borders)
     : cellTexture(std::make_unique<Stuff::Texture>(renderer, file)),
-      pos(pos),
+      fadeTexture(std::make_unique<Stuff::Texture>(renderer, "images/test1.bmp")),
+      currentRect(currentRect),
       borders(borders),
-      currentPositionY(static_cast<float>(pos.y))
+      currentPositionY(static_cast<float>(currentRect.y))
 {
+    cellSize = SDL_Point
+    {
+            .x = currentRect.w,
+            .y = currentRect.h
+    };
     SDL_Log("Creating cell with texture %s", file.c_str());
     if(cellTexture == nullptr)
     {
@@ -26,41 +32,76 @@ Cell::~Cell()
 
 void Cell::render()
 {
-    if(cellTexture == nullptr)
+    if(cellTexture == nullptr || fadeTexture == nullptr)
         return;
 
-    cellTexture->renderTexture(pos);
+
+    if(isSplitted)
+    {
+        fadeTexture->renderTexture(
+                    SDL_Rect
+                    {
+                        .x = 0,
+                        .y = currentRect.h,
+                        .w = currentRect.w,
+                        .h = cellSize.y - currentRect.h
+                    },
+                    SDL_Rect
+                    {
+                        .x = currentRect.x,
+                        .y = borders.y,
+                        .w = currentRect.w,
+                        .h = cellSize.y - currentRect.h
+                    } );
+    }
+
+    cellTexture->renderTexture(
+                SDL_Rect
+                {
+                    .x = 0,
+                    .y = 0,
+                    .w = currentRect.w,
+                    .h = currentRect.h
+                },
+                currentRect);
+
 }
 
-void Cell::moveY(float step)
+void Cell::move(float step)
 {
     if(cellTexture == nullptr)
         return;
 
     if((currentPositionY + step) >= static_cast<float>(borders.y + borders.h))
     {
-        SDL_Log("currY + step vs b.y + b.h (%f vs %f)", (currentPositionY + step), static_cast<float>(borders.y + borders.h));
-        SDL_Log("before border{x%d, y%d, w%d, h%d} currY{%f} pos {x%d, y%d, w%d, h%d} step %f",
-                borders.x, borders.y, borders.w, borders.h, currentPositionY, pos.x, pos.y, pos.w, pos.h, step);
+        currentRect.h = cellSize.y;
+        isSplitted = false;
+
         currentPositionY = static_cast<float>(borders.y) + ((currentPositionY - borders.y) + step - borders.h);
-        pos.y = static_cast<int>(currentPositionY);
-        SDL_Log("after border{x%d, y%d, w%d, h%d} currY{%f} pos {x%d, y%d, w%d, h%d} step %f",
-                borders.x, borders.y, borders.w, borders.h, currentPositionY, pos.x, pos.y, pos.w, pos.h, step);
+        currentRect.y = static_cast<int>(currentPositionY);
     }
     else
     {
         currentPositionY += step;
-        SDL_Log("current Position %f step %f", currentPositionY, step);
 
-        pos.y = static_cast<int>(currentPositionY);
+        currentRect.y = static_cast<int>(currentPositionY);
+
+        if(currentRect.y + cellSize.y > borders.y + borders.h)
+        {
+            auto diff = (currentRect.y + cellSize.y) - (borders.y + borders.h);
+            currentRect.h = cellSize.y - diff;
+
+            isSplitted = true;
+        }
     }
 
 }
 
-void Cell::setPosition(int y)
+void Cell::reset(int y)
 {
     currentPositionY = static_cast<int>(y);
-    pos.y = y;
+    currentRect.y = y;
+    currentRect.h = cellSize.y;
 }
 
 } // GUI

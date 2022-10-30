@@ -67,7 +67,7 @@ void Drum::render(float timeStep)
         if((targetShufflingDistance - moveStep) <= 0)
         {
             for(auto &[cell, index] : cells)
-                cell->setPosition(cellsStrongPositions.at(index).y);
+                cell->reset(cellsStrongPositions.at(index).y);
 
             targetShufflingDistance = 0.0f;
             shuffling = false;
@@ -75,7 +75,7 @@ void Drum::render(float timeStep)
         else
         {
             for(auto &[cell, _] : cells)
-                cell->moveY(moveStep);
+                cell->move(moveStep);
 
             targetShufflingDistance -= moveStep;
         }
