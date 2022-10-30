@@ -33,7 +33,7 @@ private:
     float currentTime { 0.0f };
 
     std::unique_ptr<GUI::Button> startButton{ nullptr };
-    std::unique_ptr<GUI::Drum> drum{ nullptr };
+    std::vector<std::unique_ptr<GUI::Drum>> drums;
 
     bool initSDL();
     bool initWindow();

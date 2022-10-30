@@ -52,7 +52,13 @@ bool MainWindow::loop()
             if( e.type == SDL_KEYUP )
             {
                 SDL_Log("SDL KeyUp");
-                drum->startShuffle(4.5f);
+                for(std::size_t i = 0; i < drums.size(); ++i)
+                {
+                    if(drums.at(i) == nullptr)
+                        continue;
+
+                    drums.at(i)->startShuffle(4.0f + 0.25f * i);
+                }
             }
 
         }
@@ -131,7 +137,6 @@ bool MainWindow::initGame()
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
 
     auto buttonPos = SDL_Rect {
             .x = static_cast<int>(window_width)/2 - 50,
@@ -144,15 +149,24 @@ bool MainWindow::initGame()
                                                 "images/button.bmp",
                                                 buttonPos);
 
-    drum = std::make_unique<GUI::Drum>(renderer,
-                                       std::vector<std::string>
-                                       {
-                                           "images/test.bmp",
-                                           "images/test.bmp",
-                                           "images/test.bmp"
-                                        },
-                                       SDL_Point{.x = 50, .y = 50},
-                                       SDL_Point{.x = 100, .y = 100});
+
+    const std::vector<std::string> drumImages =
+    {
+        "images/test.bmp",
+        "images/test.bmp",
+        "images/test.bmp"
+    };
+
+    for(std::size_t i = 0; i < 5; ++i)
+    {
+        drums.push_back(
+                    std::make_unique<GUI::Drum>(renderer,
+                                                drumImages,
+                                                SDL_Point{.x = static_cast<int>(50 + 100 * i), .y = 50},
+                                                SDL_Point{.x = 75, .y = 75}
+                                                )
+                    );
+    }
 
     return true;
 }
@@ -166,7 +180,13 @@ void MainWindow::clear()
 void MainWindow::render(float timeStep)
 {
     startButton->render(timeStep);
-    drum->render(timeStep);
+    for(auto &drum : drums)
+    {
+        if(drum == nullptr)
+            continue;
+
+        drum->render(timeStep);
+    }
 
     SDL_RenderPresent(renderer);
 }

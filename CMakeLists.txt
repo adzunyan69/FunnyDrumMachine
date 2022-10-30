@@ -29,6 +29,8 @@ set(SOURCES
   src/Stuff/texture.cpp
   src/Stuff/timer.h
   src/Stuff/timer.cpp
+  src/Stuff/uniformrandom.h
+  src/Stuff/uniformrandom.cpp
   src/GameModule/button.h
   src/GameModule/button.cpp
   src/GameModule/drum.h

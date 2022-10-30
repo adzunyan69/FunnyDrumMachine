@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include "cell.h"
+#include "../Stuff/uniformrandom.h"
 
 namespace GUI
 {

@@ -93,7 +93,8 @@ void Drum::startShuffle(float seconds)
     if(isShuffling() == true)
         return;
 
-    std::size_t steps = 25; // randomize
+    std::size_t steps = static_cast<std::size_t>(Stuff::UniformRandom::uniformInt(25, 50));
+    SDL_Log("Steps for the drum: %d", steps);
 
     setNewIndexes(steps);
     targetShufflingDistance = static_cast<float>(steps) * (cellSize.y + spacingBetweenCells);
