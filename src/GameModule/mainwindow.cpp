@@ -18,7 +18,7 @@ MainWindow::~MainWindow()
 
 bool MainWindow::init()
 {
-  auto init = (initSDL() &&
+  bool init = (initSDL() &&
                initTTF() &&
                initWindow() &&
                initSurface() &&
@@ -141,7 +141,7 @@ bool MainWindow::initGame()
 
 bool MainWindow::initStartButton()
 {
-  auto buttonPos = SDL_Rect {
+  SDL_Rect buttonPos = SDL_Rect {
                    .x = static_cast<int>(windowWidth)/2 - 50,
                    .y = static_cast<int>(windowHeight) - 105,
                    .w = 100,
